@@ -6,10 +6,10 @@
 
 #import "GeneratedPluginRegistrant.h"
 
-#if __has_include(<connectivity_plus/ConnectivityPlusPlugin.h>)
-#import <connectivity_plus/ConnectivityPlusPlugin.h>
+#if __has_include(<connectivity_state_plus/ConnectivityPlusPlugin.h>)
+#import <connectivity_state_plus/ConnectivityPlusPlugin.h>
 #else
-@import connectivity_plus;
+@import connectivity_state_plus;
 #endif
 
 #if __has_include(<integration_test/IntegrationTestPlugin.h>)
