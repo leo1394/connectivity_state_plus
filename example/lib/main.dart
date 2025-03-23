@@ -7,7 +7,7 @@
 import 'dart:async';
 import 'dart:developer' as developer;
 
-import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:connectivity_state_plus/connectivity_state_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -42,9 +42,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<ConnectivityResult> _connectionStatus = [ConnectivityResult.none];
+  ConnectivityState _connectionStatus = ConnectivityState.none;
   final Connectivity _connectivity = Connectivity();
-  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
+  late StreamSubscription<ConnectivityState> _connectivitySubscription;
 
   @override
   void initState() {
@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initConnectivity() async {
-    late List<ConnectivityResult> result;
+    late ConnectivityState result;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       result = await _connectivity.checkConnectivity();
@@ -82,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return _updateConnectionStatus(result);
   }
 
-  Future<void> _updateConnectionStatus(List<ConnectivityResult> result) async {
+  Future<void> _updateConnectionStatus(ConnectivityState result) async {
     setState(() {
       _connectionStatus = result;
     });
@@ -102,20 +102,15 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           const Spacer(flex: 2),
           Text(
-            'Active connection types:',
+            'Active connection state:',
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           const Spacer(),
-          ListView(
-            shrinkWrap: true,
-            children: List.generate(
-                _connectionStatus.length,
-                (index) => Center(
-                      child: Text(
-                        _connectionStatus[index].toString(),
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                    )),
+          Center(
+            child: Text(
+              _connectionStatus.toString(),
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
           ),
           const Spacer(flex: 2),
         ],
