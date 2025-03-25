@@ -1,3 +1,6 @@
+## 0.1.4
+- bug fixed: macos plugin build
+
 ## 0.1.3
 - bug fixed: ios plugin build
 
