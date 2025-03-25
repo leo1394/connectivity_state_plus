@@ -1,3 +1,6 @@
+## 0.1.3
+- bug fixed: ios plugin build
+
 ## 0.1.2
 - pubspec.yaml tiny tuned
 

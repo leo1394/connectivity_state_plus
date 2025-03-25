@@ -1,0 +1,4 @@
+module connectivity_state_plus {
+    header "/Users/yuyl_field/Code/clobotics/rea-flutter/modules/connectivity_state_plus/ios/connectivity_state_plus/.build/arm64-apple-macosx/debug/connectivity_state_plus.build/connectivity_state_plus-Swift.h"
+    requires objc
+}

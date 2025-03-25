@@ -1,6 +1,6 @@
 name: connectivity_state_plus
 description: Flutter plugin to detect and monitor real-time network connectivity status—including WiFi, cellular (mobile), and restricted networks—seamlessly across Android and iOS.
-version: 0.1.2
+version: 0.1.3
 homepage: https://github.com/leo1394/connectivity_state_plus
 repository: https://github.com/leo1394/connectivity_state_plus
 issue_tracker: https://github.com/leo1394/connectivity_state_plus/issues

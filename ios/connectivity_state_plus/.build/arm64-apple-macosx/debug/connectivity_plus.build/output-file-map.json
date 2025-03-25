@@ -1,0 +1,23 @@
+{
+  "": {
+    "swift-dependencies": "/Users/yuyl_field/Code/jarvis/connectivity_state_plus/ios/connectivity_state_plus/.build/arm64-apple-macosx/debug/connectivity_plus.build/master.swiftdeps"
+  },
+  "/Users/yuyl_field/Code/jarvis/connectivity_state_plus/ios/connectivity_state_plus/Sources/connectivity_state_plus/ConnectivityPlusPlugin.swift": {
+    "dependencies": "/Users/yuyl_field/Code/jarvis/connectivity_state_plus/ios/connectivity_state_plus/.build/arm64-apple-macosx/debug/connectivity_plus.build/ConnectivityPlusPlugin.d",
+    "object": "/Users/yuyl_field/Code/jarvis/connectivity_state_plus/ios/connectivity_state_plus/.build/arm64-apple-macosx/debug/connectivity_plus.build/ConnectivityPlusPlugin.swift.o",
+    "swiftmodule": "/Users/yuyl_field/Code/jarvis/connectivity_state_plus/ios/connectivity_state_plus/.build/arm64-apple-macosx/debug/connectivity_plus.build/ConnectivityPlusPlugin~partial.swiftmodule",
+    "swift-dependencies": "/Users/yuyl_field/Code/jarvis/connectivity_state_plus/ios/connectivity_state_plus/.build/arm64-apple-macosx/debug/connectivity_plus.build/ConnectivityPlusPlugin.swiftdeps"
+  },
+  "/Users/yuyl_field/Code/jarvis/connectivity_state_plus/ios/connectivity_state_plus/Sources/connectivity_state_plus/ConnectivityProvider.swift": {
+    "dependencies": "/Users/yuyl_field/Code/jarvis/connectivity_state_plus/ios/connectivity_state_plus/.build/arm64-apple-macosx/debug/connectivity_plus.build/ConnectivityProvider.d",
+    "object": "/Users/yuyl_field/Code/jarvis/connectivity_state_plus/ios/connectivity_state_plus/.build/arm64-apple-macosx/debug/connectivity_plus.build/ConnectivityProvider.swift.o",
+    "swiftmodule": "/Users/yuyl_field/Code/jarvis/connectivity_state_plus/ios/connectivity_state_plus/.build/arm64-apple-macosx/debug/connectivity_plus.build/ConnectivityProvider~partial.swiftmodule",
+    "swift-dependencies": "/Users/yuyl_field/Code/jarvis/connectivity_state_plus/ios/connectivity_state_plus/.build/arm64-apple-macosx/debug/connectivity_plus.build/ConnectivityProvider.swiftdeps"
+  },
+  "/Users/yuyl_field/Code/jarvis/connectivity_state_plus/ios/connectivity_state_plus/Sources/connectivity_state_plus/PathMonitorConnectivityProvider.swift": {
+    "dependencies": "/Users/yuyl_field/Code/jarvis/connectivity_state_plus/ios/connectivity_state_plus/.build/arm64-apple-macosx/debug/connectivity_plus.build/PathMonitorConnectivityProvider.d",
+    "object": "/Users/yuyl_field/Code/jarvis/connectivity_state_plus/ios/connectivity_state_plus/.build/arm64-apple-macosx/debug/connectivity_plus.build/PathMonitorConnectivityProvider.swift.o",
+    "swiftmodule": "/Users/yuyl_field/Code/jarvis/connectivity_state_plus/ios/connectivity_state_plus/.build/arm64-apple-macosx/debug/connectivity_plus.build/PathMonitorConnectivityProvider~partial.swiftmodule",
+    "swift-dependencies": "/Users/yuyl_field/Code/jarvis/connectivity_state_plus/ios/connectivity_state_plus/.build/arm64-apple-macosx/debug/connectivity_plus.build/PathMonitorConnectivityProvider.swiftdeps"
+  }
+}
