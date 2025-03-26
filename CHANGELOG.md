@@ -1,3 +1,6 @@
+## 0.1.5
+- ios & macos plugin name changed
+
 ## 0.1.4
 - bug fixed: macos plugin build
 
