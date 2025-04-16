@@ -97,8 +97,8 @@ class Connectivity {
   /// Based on rule: Innocent until proven guilty
   /// check if connectivity is reliable
   Future<bool> _isConnectivityReliable() async {
-    final domain =
-    _address.replaceAll(RegExp(r"http[s]?\:\/\/"), "")
+    final domain = _address
+        .replaceAll(RegExp(r"http[s]?\:\/\/"), "")
         .replaceAll(RegExp(r"\/$"), "");
     if (domain.isEmpty) {
       return true;
@@ -109,7 +109,11 @@ class Connectivity {
         try {
           final uri = Uri.parse(_address);
           final host = uri.host;
-          final port = uri.port > 0 ? uri.port : uri.scheme == 'https' ? 443 : 80;
+          final port = uri.port > 0
+              ? uri.port
+              : uri.scheme == 'https'
+                  ? 443
+                  : 80;
 
           await Socket.connect(host, port, timeout: const Duration(seconds: 5));
         } on SocketException {
