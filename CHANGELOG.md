@@ -1,3 +1,6 @@
+## 0.1.6
+- preciser connection check
+
 ## 0.1.5
 - ios & macos plugin name changed
 

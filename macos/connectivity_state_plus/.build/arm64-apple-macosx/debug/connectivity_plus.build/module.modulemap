@@ -1,4 +1,0 @@
-module connectivity_plus {
-    header "/Users/yuyl_field/Code/jarvis/connectivity_state_plus/macos/connectivity_state_plus/.build/arm64-apple-macosx/debug/connectivity_plus.build/connectivity_plus-Swift.h"
-    requires objc
-}

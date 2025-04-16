@@ -18,7 +18,7 @@ export 'src/connectivity_plus_linux.dart'
 
 /// Discover network connectivity configurations: Distinguish between WI-FI and cellular, check WI-FI status and more.
 class Connectivity {
-  static String _domain = "";
+  static String _address = "";
 
   /// Constructs a singleton instance of [Connectivity].
   ///
@@ -91,21 +91,33 @@ class Connectivity {
   }
 
   setAddressCheckOption(String address) {
-    _domain = address
-        .replaceAll(RegExp(r"http[s]?\:\/\/"), "")
-        .replaceAll(RegExp(r"\/$"), "");
+    _address = address;
   }
 
   /// Based on rule: Innocent until proven guilty
   /// check if connectivity is reliable
   Future<bool> _isConnectivityReliable() async {
-    if (_domain.isEmpty) {
+    final domain =
+    _address.replaceAll(RegExp(r"http[s]?\:\/\/"), "")
+        .replaceAll(RegExp(r"\/$"), "");
+    if (domain.isEmpty) {
       return true;
     }
     try {
-      final result = await InternetAddress.lookup(_domain);
+      final result = await InternetAddress.lookup(domain);
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        return true;
+        try {
+          final uri = Uri.parse(_address);
+          final host = uri.host;
+          final port = uri.port > 0 ? uri.port : uri.scheme == 'https' ? 443 : 80;
+
+          await Socket.connect(host, port, timeout: const Duration(seconds: 5));
+        } on SocketException {
+          return false;
+        } on FormatException {
+          print('Invalid URL format');
+          return false;
+        }
       }
     } on SocketException catch (_) {
       return false;

@@ -6,8 +6,8 @@
 
 #import "GeneratedPluginRegistrant.h"
 
-#if __has_include(<connectivity_state_plus/ConnectivityStatePlusPlugin.h>)
-#import <connectivity_state_plus/ConnectivityStatePlusPlugin.h>
+#if __has_include(<connectivity_state_plus/ConnectivityPlusPlugin.h>)
+#import <connectivity_state_plus/ConnectivityPlusPlugin.h>
 #else
 @import connectivity_state_plus;
 #endif
@@ -21,7 +21,7 @@
 @implementation GeneratedPluginRegistrant
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
-  [ConnectivityStatePlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"ConnectivityStatePlusPlugin"]];
+  [ConnectivityPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"ConnectivityPlusPlugin"]];
   [IntegrationTestPlugin registerWithRegistrar:[registry registrarForPlugin:@"IntegrationTestPlugin"]];
 }
 
