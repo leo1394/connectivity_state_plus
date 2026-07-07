@@ -1,3 +1,6 @@
+## 0.1.7
+- Add vibe coding agent context for Codex, Claude, Cursor, and Copilot.
+
 ## 0.1.6
 - preciser connection check
 

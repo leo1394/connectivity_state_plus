@@ -1,0 +1,7 @@
+---
+description: connectivity_state_plus usage context
+globs: **/*.dart
+alwaysApply: false
+---
+
+Use `ConnectivityState`, not raw `ConnectivityResult`, for app behavior. Configure reachability with `Connectivity().setAddressCheckOption(...)`. Listen through `Connectivity().onConnectivityChanged` and cancel subscriptions in `dispose`. Use `checkVPNConnectivity()` only where platform support is expected.
