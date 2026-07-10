@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:connectivity_state_plus/connectivity_state_plus.dart';
 import 'package:connectivity_plus_platform_interface/connectivity_plus_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -24,7 +26,84 @@ void main() {
 
     test('checkConnectivity', () async {
       final result = await connectivity.checkConnectivity();
-      expect(result, kCheckConnectivityResult);
+      expect(result, ConnectivityState.wifi);
+    });
+
+    test('checkConnectivity supports address with port', () async {
+      final server = await ServerSocket.bind(InternetAddress.loopbackIPv4, 0);
+      connectivity.setAddressCheckOption('http://127.0.0.1:${server.port}');
+
+      try {
+        final result = await connectivity.checkConnectivity();
+        expect(result, ConnectivityState.wifi);
+      } finally {
+        await server.close();
+        connectivity.setAddressCheckOption('');
+      }
+    });
+
+    test('checkConnectivity reuses recent address check', () async {
+      final server = await ServerSocket.bind(InternetAddress.loopbackIPv4, 0);
+      connectivity.setAddressCheckOption('http://127.0.0.1:${server.port}');
+
+      try {
+        final firstResult = await connectivity.checkConnectivity();
+        await server.close();
+        final secondResult = await connectivity.checkConnectivity();
+
+        expect(firstResult, ConnectivityState.wifi);
+        expect(secondResult, ConnectivityState.wifi);
+      } finally {
+        await server.close();
+        connectivity.setAddressCheckOption('');
+      }
+    });
+
+    test('checkConnectivity shares concurrent address check', () async {
+      final server = await ServerSocket.bind(InternetAddress.loopbackIPv4, 0);
+      final acceptedSockets = <Socket>[];
+      var connectionCount = 0;
+      final subscription = server.listen((socket) {
+        acceptedSockets.add(socket);
+        connectionCount++;
+      });
+      connectivity.setAddressCheckOption('http://127.0.0.1:${server.port}');
+
+      try {
+        final results = await Future.wait([
+          connectivity.checkConnectivity(),
+          connectivity.checkConnectivity(),
+          connectivity.checkConnectivity(),
+        ]);
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+
+        expect(results, everyElement(ConnectivityState.wifi));
+        expect(connectionCount, 1);
+      } finally {
+        for (final socket in acceptedSockets) {
+          socket.destroy();
+        }
+        await subscription.cancel();
+        await server.close();
+        connectivity.setAddressCheckOption('');
+      }
+    });
+
+    test('setAddressCheckOption invalidates cached address check', () async {
+      final server = await ServerSocket.bind(InternetAddress.loopbackIPv4, 0);
+      connectivity.setAddressCheckOption('http://127.0.0.1:${server.port}');
+
+      try {
+        final firstResult = await connectivity.checkConnectivity();
+        connectivity.setAddressCheckOption('not-a-url');
+        final secondResult = await connectivity.checkConnectivity();
+
+        expect(firstResult, ConnectivityState.wifi);
+        expect(secondResult, ConnectivityState.restricted);
+      } finally {
+        await server.close();
+        connectivity.setAddressCheckOption('');
+      }
     });
   });
 }

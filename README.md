@@ -7,7 +7,7 @@
 [![GitHub Stars](https://img.shields.io/github/stars/leo1394/connectivity_state_plus.svg?branch=master)](https://github.com/leo1394/connectivity_state_plus/stargazers)
 [![GitHub License](https://img.shields.io/badge/license-MIT%20-blue.svg)](https://raw.githubusercontent.com/leo1394/connectivity_state_plus/master/LICENSE)
 
-This Flutter plugin to detect and monitor real-time network connectivity status—including WiFi, cellular (mobile), and restricted networks (e.g., captive portals)—seamlessly across Android and iOS.
+`connectivity_state_plus` monitors WiFi, cellular, and restricted network states across Flutter platforms. In addition to detecting the active network interface, it can verify real TCP reachability to a configured host and port, avoiding false positives when a device is connected to WiFi or cellular but the required service cannot be reached.
 
 
 ## Platform Support
@@ -33,13 +33,28 @@ published on pub.dev, run this Flutter command
 flutter pub add connectivity_state_plus
 ```
 
+## Real TCP Reachability
+
+Configure the singleton `Connectivity` instance with the address your application needs to reach. The plugin parses the host and port, then attempts a real TCP connection. When WiFi or cellular is available but the configured service cannot be reached, it returns `ConnectivityState.restricted`.
+
+Explicit ports are supported:
+
+```dart
+Connectivity().setAddressCheckOption('http://192.168.54.37:8080');
+```
+
+When no port is specified, HTTP uses port 80 and HTTPS uses port 443:
+
+```dart
+Connectivity().setAddressCheckOption('https://pub.dev');
+```
+
+Probe results are cached for 5 seconds, and concurrent checks share the same in-progress probe. This reduces socket creation when a host application calls `checkConnectivity()` frequently. Changing the configured address invalidates the cache immediately.
+
+> This is a TCP reachability check, not an HTTP health check. A successful TCP handshake is considered reachable regardless of the HTTP response status. Use an application-level HTTP request when response content or status codes must also be validated.
+
 ## Usage
 
-To verify actual internet reachability (beyond basic network type detection), configure your singleton `Connectivity` instance with a base URL for active connectivity testing. When the device is connected to Wi-Fi/cellular but fails to reach the specified endpoint (e.g., due to captive portals or DNS issues), the state will fallback to `ConnectivityState.restricted` instead of reporting a false positive.
-```dart
-String url = "https://pub.dev";
-Connectivity().setAddressCheckOption(url);
-```
 Sample usage to listen for active connectivity state changes by subscribing to the stream.
 ```dart
 import 'package:connectivity_state_plus/connectivity_state_plus.dart';

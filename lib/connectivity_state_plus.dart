@@ -19,6 +19,12 @@ export 'src/connectivity_plus_linux.dart'
 /// Discover network connectivity configurations: Distinguish between WI-FI and cellular, check WI-FI status and more.
 class Connectivity {
   static String _address = "";
+  static const Duration _addressCheckCacheDuration = Duration(seconds: 5);
+
+  bool? _cachedAddressCheckResult;
+  DateTime? _cachedAddressCheckTime;
+  Future<bool>? _ongoingAddressCheck;
+  int _addressCheckGeneration = 0;
 
   /// Constructs a singleton instance of [Connectivity].
   ///
@@ -91,39 +97,74 @@ class Connectivity {
   }
 
   setAddressCheckOption(String address) {
+    if (_address == address) {
+      return;
+    }
     _address = address;
+    _addressCheckGeneration++;
+    _cachedAddressCheckResult = null;
+    _cachedAddressCheckTime = null;
+    _ongoingAddressCheck = null;
   }
 
   /// Based on rule: Innocent until proven guilty
   /// check if connectivity is reliable
   Future<bool> _isConnectivityReliable() async {
-    final domain = _address
-        .replaceAll(RegExp(r"http[s]?\:\/\/"), "")
-        .replaceAll(RegExp(r"\/$"), "");
-    if (domain.isEmpty) {
+    if (_address.isEmpty) {
       return true;
     }
-    try {
-      final result = await InternetAddress.lookup(domain);
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        try {
-          final uri = Uri.parse(_address);
-          final host = uri.host;
-          final port = uri.port > 0
-              ? uri.port
-              : uri.scheme == 'https'
-                  ? 443
-                  : 80;
 
-          await Socket.connect(host, port, timeout: const Duration(seconds: 5));
-        } on SocketException {
-          return false;
-        } on FormatException {
-          print('Invalid URL format');
-          return false;
-        }
+    final cachedResult = _cachedAddressCheckResult;
+    final cachedTime = _cachedAddressCheckTime;
+    if (cachedResult != null &&
+        cachedTime != null &&
+        DateTime.now().difference(cachedTime) < _addressCheckCacheDuration) {
+      return cachedResult;
+    }
+
+    final ongoingCheck = _ongoingAddressCheck;
+    if (ongoingCheck != null) {
+      return ongoingCheck;
+    }
+
+    final address = _address;
+    final generation = _addressCheckGeneration;
+    final check = _checkAddressConnectivity(address);
+    _ongoingAddressCheck = check;
+    try {
+      final result = await check;
+      if (_addressCheckGeneration == generation) {
+        _cachedAddressCheckResult = result;
+        _cachedAddressCheckTime = DateTime.now();
       }
-    } on SocketException catch (_) {
+      return result;
+    } finally {
+      if (identical(_ongoingAddressCheck, check)) {
+        _ongoingAddressCheck = null;
+      }
+    }
+  }
+
+  Future<bool> _checkAddressConnectivity(String address) async {
+    try {
+      final uri = Uri.parse(address);
+      final host = uri.host;
+      if (host.isEmpty) {
+        return false;
+      }
+      final port = uri.hasPort
+          ? uri.port
+          : uri.scheme == 'https'
+              ? 443
+              : 80;
+
+      final socket =
+          await Socket.connect(host, port, timeout: const Duration(seconds: 5));
+      socket.destroy();
+    } on SocketException {
+      return false;
+    } on FormatException {
+      print('Invalid URL format');
       return false;
     }
     return true;
