@@ -105,6 +105,35 @@ void main() {
         connectivity.setAddressCheckOption('');
       }
     });
+
+    test(
+        'checkAddressConnectivity performs an uncached one-time check '
+        'without changing the configured address', () async {
+      final configuredServer =
+          await ServerSocket.bind(InternetAddress.loopbackIPv4, 0);
+      final oneTimeServer =
+          await ServerSocket.bind(InternetAddress.loopbackIPv4, 0);
+      connectivity
+          .setAddressCheckOption('http://127.0.0.1:${configuredServer.port}');
+
+      try {
+        final address = 'http://127.0.0.1:${oneTimeServer.port}';
+        final firstResult =
+            await connectivity.checkAddressConnectivity(address);
+        await oneTimeServer.close();
+        final secondResult =
+            await connectivity.checkAddressConnectivity(address);
+        final configuredResult = await connectivity.checkConnectivity();
+
+        expect(firstResult, isTrue);
+        expect(secondResult, isFalse);
+        expect(configuredResult, ConnectivityState.wifi);
+      } finally {
+        await oneTimeServer.close();
+        await configuredServer.close();
+        connectivity.setAddressCheckOption('');
+      }
+    });
   });
 }
 

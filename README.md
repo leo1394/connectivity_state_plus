@@ -51,6 +51,15 @@ Connectivity().setAddressCheckOption('https://pub.dev');
 
 Probe results are cached for 5 seconds, and concurrent checks share the same in-progress probe. This reduces socket creation when a host application calls `checkConnectivity()` frequently. Changing the configured address invalidates the cache immediately.
 
+To perform a one-time reachability check without changing the address configured by `setAddressCheckOption`, pass the address directly:
+
+```dart
+final bool isReachable = await Connectivity()
+    .checkAddressConnectivity('http://10.192.13.98:8087');
+```
+
+One-time checks are not cached.
+
 > This is a TCP reachability check, not an HTTP health check. A successful TCP handshake is considered reachable regardless of the HTTP response status. Use an application-level HTTP request when response content or status codes must also be validated.
 
 ## Usage

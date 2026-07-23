@@ -1,3 +1,6 @@
+## 0.1.9
+- Add `checkAddressConnectivity` for uncached one-time TCP reachability checks without changing the configured address.
+
 ## 0.1.8
 - Add real TCP reachability checks for addresses with explicit ports.
 - Use HTTP port 80 and HTTPS port 443 when no port is specified.

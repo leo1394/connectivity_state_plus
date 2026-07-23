@@ -129,7 +129,7 @@ class Connectivity {
 
     final address = _address;
     final generation = _addressCheckGeneration;
-    final check = _checkAddressConnectivity(address);
+    final check = checkAddressConnectivity(address);
     _ongoingAddressCheck = check;
     try {
       final result = await check;
@@ -145,7 +145,11 @@ class Connectivity {
     }
   }
 
-  Future<bool> _checkAddressConnectivity(String address) async {
+  /// Checks whether [address] is reachable with a one-time TCP connection.
+  ///
+  /// This does not change the address configured by [setAddressCheckOption]
+  /// and does not cache the result.
+  Future<bool> checkAddressConnectivity(String address) async {
     try {
       final uri = Uri.parse(address);
       final host = uri.host;
