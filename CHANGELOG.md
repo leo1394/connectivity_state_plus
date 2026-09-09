@@ -1,3 +1,8 @@
+## 0.1.10
+
+* Add probe-free system network queries and events; preserve existing reachability APIs.
+* Clarify that restricted indicates a failed address probe, not global offline status.
+
 ## 0.1.9
 - Add `checkAddressConnectivity` for uncached one-time TCP reachability checks without changing the configured address.
 

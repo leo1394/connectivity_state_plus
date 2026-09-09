@@ -70,11 +70,47 @@ class Connectivity {
         );
   }
 
+  /// Reports system network interfaces without probing a server.
+  ///
+  /// A connected interface allows attempting a request; it does not guarantee
+  /// Internet or server availability. This stream never emits restricted.
+  Stream<ConnectivityState> get onNetworkConnectivityChanged {
+    return _platform.onConnectivityChanged
+        .map(_networkConnectivityConvert)
+        .distinct();
+  }
+
+  /// Reads system network interfaces without TCP probes or cached probe results.
+  /// This method never returns restricted and does not guarantee request success.
+  Future<ConnectivityState> checkNetworkConnectivity() async {
+    return _networkConnectivityConvert(await _platform.checkConnectivity());
+  }
+
+  ConnectivityState _networkConnectivityConvert(
+      List<ConnectivityResult> results) {
+    if (results.contains(ConnectivityResult.wifi)) {
+      return ConnectivityState.wifi;
+    }
+    if (results.contains(ConnectivityResult.mobile)) {
+      return ConnectivityState.mobile;
+    }
+    if (results.contains(ConnectivityResult.ethernet)) {
+      return ConnectivityState.unknown;
+    }
+    if (results.contains(ConnectivityResult.vpn)) {
+      return ConnectivityState.vpn;
+    }
+    if (results.any((result) => result != ConnectivityResult.none)) {
+      return ConnectivityState.unknown;
+    }
+    return ConnectivityState.none;
+  }
+
   /// Checks the connection status of the device.
   ///
-  /// Do not use the result of this function to decide whether you can reliably
-  /// make a network request, it only gives you the radio status. Instead, listen
-  /// for connectivity changes via [onConnectivityChanged] stream.
+  /// Includes a TCP probe when an address has been configured. A restricted
+  /// result describes that probe only and must not override HTTP responses.
+  /// Use [checkNetworkConnectivity] for system interface state without a probe.
   ///
   /// The returned list is never empty. In case of no connectivity, the list contains
   /// a single element of [ConnectivityResult.none]. Note also that this is the only

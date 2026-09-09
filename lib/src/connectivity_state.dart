@@ -8,7 +8,8 @@ enum ConnectivityState {
   /// None: Device not connected to any network
   none,
 
-  /// Restricted: Device connected to Wi-Fi/cellular, not accessible to address checked
+  /// Restricted: A probe to the configured address failed on Wi-Fi/cellular.
+  /// This does not establish that the Internet or other requests are unavailable.
   restricted,
 
   /// VPN: Device connected to a VPN, Only Supported on iOS and macOS

@@ -7,8 +7,28 @@
 [![GitHub Stars](https://img.shields.io/github/stars/leo1394/connectivity_state_plus.svg?branch=master)](https://github.com/leo1394/connectivity_state_plus/stargazers)
 [![GitHub License](https://img.shields.io/badge/license-MIT%20-blue.svg)](https://raw.githubusercontent.com/leo1394/connectivity_state_plus/master/LICENSE)
 
-`connectivity_state_plus` monitors WiFi, cellular, and restricted network states across Flutter platforms. In addition to detecting the active network interface, it can verify real TCP reachability to a configured host and port, avoiding false positives when a device is connected to WiFi or cellular but the required service cannot be reached.
+`connectivity_state_plus` provides system network interface state and optional TCP reachability checks across Flutter platforms. Interface availability and the result of a probe to one configured host are separate signals; neither guarantees that an HTTP request will succeed.
 
+
+## Network interfaces versus server reachability
+
+Use `checkNetworkConnectivity()` and `onNetworkConnectivityChanged` for system
+connection state without an extra TCP probe. Only `none` means no connected
+interface; `unknown` includes Ethernet and other connected interface types.
+These APIs never return `restricted` and do not guarantee HTTP request success.
+
+```dart
+final state = await Connectivity().checkNetworkConnectivity();
+final subscription = Connectivity().onNetworkConnectivityChanged.listen((state) {
+  // Update connection UI; handle request failures at the request boundary.
+});
+```
+
+Existing `checkConnectivity()`, `onConnectivityChanged`, and address-check APIs
+retain their behavior. Their `restricted` result means one configured-address
+probe failed, not that all networking is unavailable. Do not reject a successful
+HTTP response or block all requests based on that result. Probe cache expiration
+does not automatically trigger another check or a connectivity event.
 
 ## Platform Support
 
